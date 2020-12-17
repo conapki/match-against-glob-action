@@ -10,7 +10,7 @@ async function run() {
   try {
     const filenames = core.getInput("filenames");
     core.startGroup("Using filenames:\n");
-    for (const name of filenames) {
+    for (const name of filenames.split(",")) {
       core.info(name + "\n");
     }
     core.endGroup();
@@ -18,7 +18,7 @@ async function run() {
     const patterns = core.getInput("patterns");
 
     core.startGroup("Using glob patterns:\n");
-    for (const pattern of patterns) {
+    for (const pattern of patterns.split(",")) {
       core.info(pattern + "\n");
     }
     core.endGroup();
@@ -26,14 +26,16 @@ async function run() {
     const globber = await glob.create(filenames, globOptions);
     const matchingFiles = await globber.glob();
 
-    core.startGroup("Files that match the glob patterns:\n");
-    for (const file of matchingFiles) {
-      core.info(file + "\n");
-    }
-    core.endGroup();
-
     if (matchingFiles.length > 0) {
+      core.startGroup("Files that match the glob patterns:\n");
+      for (const file of matchingFiles.split(",")) {
+        core.info(file + "\n");
+      }
+      core.endGroup();
       core.setOutput("match", "true");
+    } else {
+      core.info("No files matched the pattern");
+      core.setOutput("match", "false");
     }
 
     core.setOutput("files", matchingFiles);
