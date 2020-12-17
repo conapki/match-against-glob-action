@@ -1,0 +1,22 @@
+name: 'Match against glob'
+description: 'Matches input strings (usually filenames) against provided array of glob patterns'
+inputs:
+  filenames:
+    description: 'List one or many strings to test'
+    required: true
+  patterns:
+    description: 'List one or many glob patterns to test against'
+    required: true
+  followSymbolicLinks:
+    description: 'Should follow symbolic links or not. Default: false'
+    required: false
+    default: 'false'
+outputs:
+  match: 
+    description: 'True if at least one filename matches against at least one glob. False if no matches were found'
+  files: 
+    description: 'Lists all files matching the patterns'
+runs:
+  using: 'node12'
+  main: 'src/index.js'
+

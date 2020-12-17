@@ -1,0 +1,30 @@
+{
+  "name": "match-against-glob-action",
+  "version": "1.0.0",
+  "description": "Github action to test whether filenames match against glob patterns",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kurnev/match-against-glob-action.git"
+  },
+  "keywords": [
+    "actions",
+    "github",
+    "glob",
+    "files",
+    "pull-request"
+  ],
+  "author": "Egor Kurnev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kurnev/match-against-glob-action/issues"
+  },
+  "homepage": "https://github.com/kurnev/match-against-glob-action#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "@actions/glob": "^0.1.1"
+  }
+}
