@@ -3,7 +3,7 @@ const glob = require("@actions/glob");
 
 const globOptions = {
   followSymbolicLinks:
-    core.getInput("follow-symbolic-links").toUpper() !== "FALSE",
+    core.getInput("follow-symbolic-links").toLowerCase() !== "false",
 };
 
 async function run() {

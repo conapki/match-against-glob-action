@@ -7,7 +7,7 @@ inputs:
   patterns:
     description: 'List one or many glob patterns to test against'
     required: true
-  followSymbolicLinks:
+  follow-symbolic-links:
     description: 'Should follow symbolic links or not. Default: false'
     required: false
     default: 'false'
