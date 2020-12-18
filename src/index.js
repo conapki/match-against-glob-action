@@ -19,12 +19,14 @@ async function run() {
 
     const matchingFiles = [];
 
+    core.startGroup("Testing files:");
     for (const name of filenames.split(",")) {
       for (const pattern of patterns.split(",")) {
         core.info(`${name} against ${pattern}`);
         if (minimatch(name, pattern)) matchingFiles.push(name);
       }
     }
+    core.endGroup();
 
     if (matchingFiles.length > 0) {
       core.startGroup("Files that match the glob patterns:");
