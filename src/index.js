@@ -21,15 +21,14 @@ async function run() {
 
     for (const name of filenames.split(",")) {
       for (const pattern of patterns.split(",")) {
-        if (minimatch(name, pattern)) {
-          matchingFiles.push(name);
-        }
+        core.info(`${name} against ${pattern}`);
+        if (minimatch(name, pattern)) matchingFiles.push(name);
       }
     }
 
     if (matchingFiles.length > 0) {
       core.startGroup("Files that match the glob patterns:");
-      for (const file of matchingFiles.split(",")) {
+      for (const file of matchingFiles) {
         core.info(file);
       }
       core.endGroup();
