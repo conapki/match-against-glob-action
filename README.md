@@ -30,12 +30,11 @@ Get files changed in pull request
   id: match
   with:
     filenames: ${{ join(fromJson(steps.get_files.outputs.data).*.filename) }}
-    patterns: |
-      - services/nuxt/**/*
-      - packages/shared/**/*
-- name: Running unit tests
+    patterns: 'services/nuxt/**/*,packages/shared/**/*'
+- name: Run unit tests
   if: ${{ steps.match.outputs.match == 'true' }}
   uses: ./.github/actions/unit-tests/
+  ...
 ```
 
 ## [License](./LICENSE)
