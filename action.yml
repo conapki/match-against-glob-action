@@ -2,10 +2,10 @@ name: 'Match against glob'
 description: 'Matches filenames against glob patterns. Uses minimatch'
 inputs:
   filenames:
-    description: 'List one or many strings to test'
+    description: 'Filenames to test. Use comma separated list in string format'
     required: true
   patterns:
-    description: 'List one or many glob patterns to test against'
+    description: 'Glob patterns to test against. Use comma separated list in string format'
     required: true
 outputs:
   match: 

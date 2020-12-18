@@ -5,7 +5,7 @@ This action tests whether filenames match against provided glob patterns. Useful
 ## Inputs
 
 - **Required** `filenames`: Filenames split by comma. E.g. `src/index.js,package.json,./tests/index.test.js`
-- **Required** `patterns`: Glob patterns as a YAML list. See example below
+- **Required** `patterns`: Glob patterns as a YAML list. E.g. `services/*-service/**/*,packages/**/*`
 
 ## Outputs
 
