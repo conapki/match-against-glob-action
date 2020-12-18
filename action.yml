@@ -1,5 +1,5 @@
 name: 'Match against glob'
-description: 'Matches input strings (usually filenames) against provided array of glob patterns'
+description: 'Matches filenames against glob patterns. Uses minimatch'
 inputs:
   filenames:
     description: 'List one or many strings to test'
@@ -7,10 +7,6 @@ inputs:
   patterns:
     description: 'List one or many glob patterns to test against'
     required: true
-  follow-symbolic-links:
-    description: 'Should follow symbolic links or not. Default: false'
-    required: false
-    default: 'false'
 outputs:
   match: 
     description: 'True if at least one filename matches against at least one glob. False if no matches were found'

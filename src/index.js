@@ -1,35 +1,36 @@
 const core = require("@actions/core");
-const glob = require("@actions/glob");
-
-const globOptions = {
-  followSymbolicLinks:
-    core.getInput("follow-symbolic-links").toLowerCase() !== "false",
-};
+const minimatch = require("minimatch");
 
 async function run() {
   try {
     const filenames = core.getInput("filenames");
-    core.startGroup("Using filenames:\n");
+    core.startGroup("Using filenames:");
     for (const name of filenames.split(",")) {
-      core.info(name + "\n");
+      core.info(name);
     }
     core.endGroup();
 
     const patterns = core.getInput("patterns");
-
-    core.startGroup("Using glob patterns:\n");
+    core.startGroup("Using glob patterns:");
     for (const pattern of patterns.split(",")) {
-      core.info(pattern + "\n");
+      core.info(pattern);
     }
     core.endGroup();
 
-    const globber = await glob.create(filenames, globOptions);
-    const matchingFiles = await globber.glob();
+    const matchingFiles = [];
+
+    for (const name of filenames.split(",")) {
+      for (const pattern of patterns.split(",")) {
+        if (minimatch(name, pattern)) {
+          matchingFiles.push(name);
+        }
+      }
+    }
 
     if (matchingFiles.length > 0) {
-      core.startGroup("Files that match the glob patterns:\n");
+      core.startGroup("Files that match the glob patterns:");
       for (const file of matchingFiles.split(",")) {
-        core.info(file + "\n");
+        core.info(file);
       }
       core.endGroup();
       core.setOutput("match", "true");
