@@ -1,6 +1,6 @@
 {
   "name": "match-against-glob-action",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Github action to test whether filenames match against glob patterns",
   "main": "src/index.js",
   "scripts": {
