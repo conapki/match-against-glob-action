@@ -13,7 +13,7 @@ outputs:
   files: 
     description: 'Lists all files matching the patterns'
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'src/index.js'
 branding:
   icon: 'file'  
