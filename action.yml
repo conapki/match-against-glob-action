@@ -14,7 +14,7 @@ outputs:
     description: 'Lists all files matching the patterns'
 runs:
   using: 'node16'
-  main: 'src/index.js'
+  main: 'index.js'
 branding:
   icon: 'file'  
   color: 'blue'
