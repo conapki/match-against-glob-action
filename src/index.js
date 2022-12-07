@@ -2,7 +2,6 @@ const core = require("@actions/core");
 const minimatch = require("minimatch");
 
 async function run() {
-  try {
     const filenames = core.getInput("filenames");
     core.startGroup("Using filenames:");
     for (const name of filenames.split(",")) {
@@ -41,9 +40,6 @@ async function run() {
     }
 
     core.setOutput("files", matchingFiles);
-  } catch (error) {
-    core.setFailed(error.message);
-  }
 }
 
 run();
