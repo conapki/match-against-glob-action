@@ -1,5 +1,5 @@
-const core = require('@actions/core');
-const minimatch = require('minimatch');
+const core = require("@actions/core");
+const minimatch = require("minimatch");
 
 async function run() {
   try {
