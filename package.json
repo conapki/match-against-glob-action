@@ -1,30 +1,27 @@
 {
   "name": "match-against-glob-action",
   "version": "1.0.0",
-  "description": "Github action to test whether filenames match against glob patterns",
-  "main": "src/index.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "ncc build index.js --license licenses.txt"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kurnev/match-against-glob-action.git"
   },
-  "keywords": [
-    "actions",
-    "github",
-    "glob",
-    "files",
-    "pull-request"
-  ],
-  "author": "Egor Kurnev",
-  "license": "MIT",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/kurnev/match-against-glob-action/issues"
   },
   "homepage": "https://github.com/kurnev/match-against-glob-action#readme",
   "dependencies": {
     "@actions/core": "^1.10.0",
-    "minimatch": "^3.0.4"
+    "@actions/github": "^4.0.0",
+    "@vercel/ncc": "^0.25.1",
+    "minimatch": "^3.1.2"
   }
 }

@@ -1,46 +1,95 @@
-# Match against glob action
+# "Last successful commit" action
 
-This action tests whether filenames match against provided glob patterns. Useful to run another steps only if needed files were changed. Similar to GitLab changes feature which is available for a single job in a workflow. Uses [minimatch](https://github.com/isaacs/minimatch) internally. 
+This action returns the commit hash when a given workflow was last successful.
+
+This is especially useful when we have a workflow where we need to know what changed
+in on a given branch between two commits, so we can run some tasks on those
+changes.
+
+Scroll down to the **Background** section below for more info around 
+why this would be useful.
 
 ## Inputs
 
-- **Required** `filenames`: Filenames split by comma. E.g. `src/index.js,package.json,./tests/index.test.js`
-- **Required** `patterns`: Glob patterns as a YAML list. E.g. `services/*-service/**/*,packages/**/*`
+### `branch`
+
+**Required** Branch to get last successful commit from.
+**Default**: `main`
+
+### `github_token`
+
+**Required** Your GitHub access token (see Usage below).
+
+### `workflow_id`
+
+**Required** ID or filename of the workflow (e.g. `deploy.yml`).
 
 ## Outputs
 
-- `match`: `'true'` if at least one file matches. `'false'` otherwise
-- `files`: Lists all files matching the patterns
+### `commit_hash`
 
-## Example usages
+Hash of the last successful commit.
 
-Get files changed in pull request
+## Example usage
 
 ```yaml
-- uses: octokit/request-action@v2.x
-  id: get_files
-  with:
-    route: GET /repos/{owner}/{repo}/pulls/{pull_number}/files
-    owner: meshokteam
-    repo: meshok
-    pull_number: ${{ github.event.pull_request.number }} 
-  env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-- uses: kurnev/match-against-glob-action@v1
-  id: match
-  with:
-    filenames: ${{ join(fromJson(steps.get_files.outputs.data).*.filename) }}
-    patterns: 'services/nuxt/**/*,packages/shared/**/*'
-- name: Run unit tests
-  if: ${{ steps.match.outputs.match == 'true' }}
-  uses: ./.github/actions/unit-tests/
-  ...
+name: Deploy Website
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Deploying affected apps
+    steps:
+      - uses: actions/checkout@v1
+      - uses: bahmutov/npm-install@v1.4.5
+      - uses: nrwl/last-successful-commit-action@v1
+        id: last_successful_commit
+        with:
+          branch: 'master'
+          workflow_id: 'deploy.yml'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - run: npm run nx affected -- --target=build --base=${{ steps.last_successful_commit.outputs.commit_hash }} --parallel --configuration=production
 ```
 
-## [License](./LICENSE)
+# Background
 
-Conventional Changelog Action is [MIT licensed](./LICENSE).
+When using a tool like [Nx](https://nx.dev/), for example, it has a feature
+where you give it 2 commits, and it calculates [which projects in your repository changed
+between those 2 commits](https://nx.dev/latest/angular/tutorial/11-test-affected-projects#step-11-test-affected-projects
+). We can then run a set of tasks (like building or linting) only
+on those **affected** projects.
 
-## Collaboration
+This makes it easy to set-up a CI system that scales really well with the
+continous growth of your repository, as you add more and more projects.
 
-If you have questions or [issues](https://github.com/kurnev/match-against-glob-action/issues), please [open an issue](https://github.com/kurnev/match-against-glob-action/issues/new)!
+
+### Problem
+
+On a CI system that runs on submitted PRs, it's easy to determine what commits to include in the **affected** calculation:
+everything between latest `origin/master` and `HEAD-commit-of-my-PRs-branch`.
+As that includes all the changes our PR will introduce to `master`.
+
+But what if we want to set up a continuous deployment system
+that, as changes get pushed to `master`, it builds and deploys
+only the affected projects?
+
+What are the `FROM` and `TO` commits in that case?
+
+They can't be just `HEAD` and `HEAD~1` - as we might push a bunch
+of commits into master. We want to include ALL those commits when determining
+affected.
+
+There's also the issue of failures - if a few deployments fail one after
+another, that means that we're accumulating a list of affected projects
+that are not getting deployed. Anytime we retry the deployment, we want to include
+**every commit since the last time we deployed successfully**. That way we ensure
+we don't accidentally skip deploying a project that has changed.
+
+Here's an attempt at demonstrating the problem above:
+
+![Failed deployments](./commit.png) 
